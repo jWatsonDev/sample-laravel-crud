@@ -7,60 +7,100 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [About Laravel](#about-laravel)
+- [Instructions for Creating CRUD App](#instructions-for-creating-crud-app)
+  - [1. Install Composer](#1-install-composer)
+  - [2. Create Laravel Project](#2-create-laravel-project)
+  - [3. Serve Project](#3-serve-project)
+  - [4. Run Database](#4-run-database)
+  - [5. Update .env with Database Credentials](#5-update-env-with-database-credentials)
+  - [6. Create Routes](#6-create-routes)
+  - [7. Update app.php](#7-update-appphp)
+  - [8. Generate Controller](#8-generate-controller)
+  - [9. Run Migrations](#9-run-migrations)
+  - [10. Create Database Table](#10-create-database-table)
+  - [11. Generate Model](#11-generate-model)
+  - [12. Update Model](#12-update-model)
+  - [13. Define CRUD Operations](#13-define-crud-operations)
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Instructions for Creating CRUD App
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Install Composer
+Install Composer with Homebrew:
+```sh
+brew install composer
+```
 
-## Learning Laravel
+### 2. Create Laravel Project
+Create a new Laravel project:
+```sh
+composer create-project --prefer-dist laravel/laravel laravel-api
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 3. Serve Project
+Serve the project:
+```sh
+php artisan serve
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 4. Run Database
+Create a Docker network and run MySQL and phpMyAdmin containers:
+```sh
+docker network create localnetwork
+docker run -d --name mysql-container --network=localnetwork -e MYSQL_ROOT_PASSWORD=password -p 3306:3306 mysql:latest
+docker run -d --name phpmyadmin-container --network=localnetwork -e PMA_HOST=mysql-container -e PMA_PORT=3306 -p 8080:80 phpmyadmin/phpmyadmin:latest
+```
+Access phpMyAdmin at [http://localhost:8080](http://localhost:8080).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Update .env with Database Credentials
+Update the `.env` file with your database credentials:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=crud_app
+DB_USERNAME=root
+DB_PASSWORD=password
+```
 
-## Laravel Sponsors
+### 6. Create Routes
+Define your API routes in `routes/api.php`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 7. Update app.php
+Ensure your routes are defined in `app/Providers/RouteServiceProvider.php`.
 
-### Premium Partners
+### 8. Generate Controller
+Generate a controller:
+```sh
+php artisan make:controller ThingController
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 9. Run Migrations
+Run migrations to set up the database:
+```sh
+php artisan migrate
+```
 
-## Contributing
+### 10. Create Database Table
+Create your database table by logging into phpMyAdmin and creating the necessary tables.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 11. Generate Model
+Generate a model:
+```sh
+php artisan make:model Thing
+```
 
-## Code of Conduct
+### 12. Update Model
+Update your model to accept all fields except those specified:
+```php
+protected $guarded = [];
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 13. Define CRUD Operations
+Define your CRUD operations in your `ThingController`.
